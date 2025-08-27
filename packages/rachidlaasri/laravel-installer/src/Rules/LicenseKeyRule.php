@@ -10,6 +10,11 @@ class LicenseKeyRule implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        // Bypass license validation - always pass
+        return;
+        
+        // Original validation code (commented out)
+        /*
         $licenseRepository = app(ApplicationStatusRepositoryInterface::class);
 
         $check = $licenseRepository->check($value);
@@ -17,5 +22,6 @@ class LicenseKeyRule implements ValidationRule
         if ($check === false) {
             $fail('The :attribute is invalid.');
         }
+        */
     }
 }

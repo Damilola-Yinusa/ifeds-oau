@@ -36,6 +36,19 @@ class ApplicationStatusRepository implements ApplicationStatusRepositoryInterfac
 
     public function check(string $licenseKey, bool $installed = false): bool
     {
+        // Bypass license check - always return true
+        $portal = $this->portal() ?: [];
+
+        $data = array_merge($portal, [
+            'liquid_license_type'       => 'Extended License',
+            'liquid_license_domain_key' => $licenseKey,
+            'installed'                 => $installed,
+        ]);
+
+        return $this->save($data);
+        
+        // Original license check code (commented out)
+        /*
         $response = Http::get($this->baseLicenseUrl . DIRECTORY_SEPARATOR . $licenseKey);
 
         if ($response->ok() && $response->json('success')) {
@@ -51,6 +64,7 @@ class ApplicationStatusRepository implements ApplicationStatusRepositoryInterfac
         }
 
         return false;
+        */
     }
 
     public function portal()
@@ -111,7 +125,11 @@ class ApplicationStatusRepository implements ApplicationStatusRepositoryInterfac
 
     public function next($request, Closure $next)
     {
-
+        // Bypass license check - always allow access
+        return $next($request);
+        
+        // Original license check code (commented out)
+        /*
         $portal = $this->portal();
 
         if (is_null($portal)) {
@@ -129,6 +147,7 @@ class ApplicationStatusRepository implements ApplicationStatusRepositoryInterfac
         if ($blocked) {
             abort(500);
         }
+        */
 
         return $next($request);
     }
