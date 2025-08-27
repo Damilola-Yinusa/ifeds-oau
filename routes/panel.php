@@ -166,6 +166,30 @@ Route::middleware(['auth', 'updateUserActivity'])
                     Route::post('/reduce-tokens/{type}', [GeneratorController::class, 'reduceTokensWhenIntterruptStream'])->name('reduce-tokens');
                 });
 
+                // Proposal Creator
+                Route::group([
+                    'as'         => 'proposal.',
+                    'prefix'     => 'proposal',
+                    'controller' => \App\Http\Controllers\User\ProposalController::class,
+                ], static function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/generate', 'generate')->name('generate');
+                    Route::post('/download-pdf', 'downloadPDF')->name('download.pdf');
+                    Route::post('/download-word', 'downloadWord')->name('download.word');
+                });
+
+                // Pitch Deck Creator
+                Route::group([
+                    'as'         => 'pitch-deck.',
+                    'prefix'     => 'pitch-deck',
+                    'controller' => \App\Http\Controllers\User\PitchDeckController::class,
+                ], static function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/generate', 'generate')->name('generate');
+                    Route::post('/download-pdf', 'downloadPDF')->name('download.pdf');
+                    Route::post('/download-word', 'downloadWord')->name('download.word');
+                });
+
                 // Openai generator
                 Route::prefix('openai')->name('openai.')
                     ->group(function () {
