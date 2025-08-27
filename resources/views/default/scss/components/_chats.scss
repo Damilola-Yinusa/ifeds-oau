@@ -1,0 +1,146 @@
+@property --animating-word-y {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+.chat-content {
+
+	* {
+		color: currentColor;
+	}
+
+	code:not([class*=language-]) {
+		@apply bg-background rounded px-1 py-0.5 text-primary font-semibold text-2xs font-mono;
+
+		&:before,
+		&:after {
+			content: '`';
+		}
+	}
+
+	blockquote {
+
+		> :first-child {
+			margin-top: 0;
+		}
+
+		> :last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	li {
+
+		>p:only-child {
+			@apply my-0;
+		}
+	}
+
+	.katex {
+		@apply mx-1 first:ms-0;
+	}
+}
+
+.animated-word {
+
+	&.done-signal {
+		display: none;
+	}
+
+	a & {
+		text-decoration: inherit;
+	}
+}
+
+code.animated-word,
+a.animated-word {
+
+	.animated-word+& {
+		@apply ms-[0.5ch]
+	}
+
+	+.animated-word {
+		@apply ms-[0.5ch]
+	}
+}
+
+strong {
+
+	.animated-word+& {
+		@apply ms-[0.25ch]
+	}
+}
+
+tr.animated-word {
+	display: table-row;
+}
+
+.lqd-chat-ai-bubble {
+
+	&.animating-words {
+		transition: --animating-word-y 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+		hr {
+			transition: transform 150ms ease;
+			transform-origin: left;
+			transform: scaleX(0);
+
+			&:has(~ .animated) {
+				transform: scaleX(1);
+			}
+		}
+
+		li {
+			transition: opacity 150ms ease;
+
+			&:not(:has(.animated)) {
+				opacity: 0;
+			}
+		}
+
+		.chat-content-container {
+
+			&:before {
+				mask-image: linear-gradient(to bottom, black var(--animating-word-y), transparent calc(var(--animating-word-y) + 7lh + 2rem));
+			}
+		}
+
+		.animated-word {
+			opacity: 0;
+
+			&:has(~ .animated) {
+				opacity: 1;
+			}
+		}
+
+		*:has(.animated-word):has(~ .animated) .animated-word {
+			opacity: 1;
+		}
+
+		*:has(.animated)~hr {
+			transform: scaleX(1);
+		}
+
+		&.streaming-on {
+
+			.chat-content-container {
+
+				&:before {
+					mask-image: linear-gradient(to bottom, black var(--animating-word-y), transparent calc(var(--animating-word-y) + 2lh + 2rem));
+				}
+			}
+		}
+	}
+
+	.lqd-typing {
+		min-height: inherit;
+	}
+
+	&:not(.loading) {
+
+		.lqd-typing {
+			display: none;
+		}
+	}
+}
